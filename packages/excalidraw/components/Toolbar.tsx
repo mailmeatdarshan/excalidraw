@@ -19,7 +19,6 @@ import {
   frameToolIcon,
   ImageIcon,
   LassoIcon,
-  laserPointerToolIcon,
   bucketFillIcon,
   MagicIcon,
   mermaidLogoIcon,
@@ -35,6 +34,7 @@ import {
   getToolShortcut,
   HandToolButton,
   isToolButtonDisabled,
+  LaserToolButton,
   LassoToolButton,
   LineToolButton,
   RectangleToolButton,
@@ -69,7 +69,6 @@ const ExtraToolsDropdown = ({
   const imageToolSelected = activeTool.type === "image";
   const frameToolSelected = activeTool.type === "frame";
   const drawShapeToolSelected = activeTool.type === "autoshape";
-  const laserToolSelected = activeTool.type === "laser";
   const bucketFillToolSelected = activeTool.type === "bucketfill";
   const lassoToolSelected =
     isFullStylesPanel &&
@@ -87,11 +86,7 @@ const ExtraToolsDropdown = ({
             embeddableToolSelected ||
             (isFullStylesPanel && drawShapeToolSelected) ||
             lassoToolSelected ||
-            bucketFillToolSelected ||
-            // in collab we're already highlighting the laser button
-            // outside toolbar, so let's not highlight extra-tools button
-            // on top of it
-            (laserToolSelected && !app.props.isCollaborating),
+            bucketFillToolSelected,
         })}
         onToggle={() => {
           setIsExtraToolsMenuOpen(!isExtraToolsMenuOpen);
@@ -107,8 +102,6 @@ const ExtraToolsDropdown = ({
           ? EmbedIcon
           : isFullStylesPanel && drawShapeToolSelected
           ? drawShapeToolIcon
-          : laserToolSelected && !app.props.isCollaborating
-          ? laserPointerToolIcon
           : lassoToolSelected
           ? LassoIcon
           : bucketFillToolSelected
@@ -160,16 +153,6 @@ const ExtraToolsDropdown = ({
           disabled={isToolButtonDisabled(app, "autoshape")}
         >
           {t("toolBar.autoshape")}
-        </DropdownMenu.Item>
-        <DropdownMenu.Item
-          onSelect={() => app.setActiveTool({ type: "laser" })}
-          icon={laserPointerToolIcon}
-          data-testid="toolbar-laser"
-          selected={laserToolSelected}
-          shortcut={KEYS.K.toLocaleUpperCase()}
-          disabled={isToolButtonDisabled(app, "laser")}
-        >
-          {t("toolBar.laser")}
         </DropdownMenu.Item>
         <DropdownMenu.Item
           onSelect={() => app.setActiveTool({ type: "bucketfill" })}
@@ -306,6 +289,7 @@ export const Toolbar = ({
           <FreedrawToolButton {...toolProps} />
         )}
         <TextToolButton {...toolProps} />
+        <LaserToolButton {...toolProps} />
         <StickyNoteToolButton {...toolProps} />
         <EraserToolButton {...toolProps} />
 
